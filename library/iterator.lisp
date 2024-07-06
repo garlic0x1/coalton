@@ -7,6 +7,7 @@
    #:coalton-library/builtin
    #:coalton-library/functions)
   (:local-nicknames
+   (#:tuple #:coalton-library/tuple)
    (#:types #:coalton-library/types)
    (#:cell #:coalton-library/cell))
   (:export
@@ -161,18 +162,18 @@ iterator is empty."
        None)))
 
   (declare range-increasing ((Num :num) (Ord :num) =>
-                             :num ->
-                             :num ->
-                             :num ->
-                             Iterator :num))
+                                        :num ->
+                                        :num ->
+                                        :num ->
+                                        Iterator :num))
   (define (range-increasing step start end)
     "An iterator which begins at START and yields successive elements spaced by STEP, stopping before END."
     (assert (>= end start)
-        "END ~a should be greater than or equal to START ~a in RANGE-INCREASING"
-        end start)
+            "END ~a should be greater than or equal to START ~a in RANGE-INCREASING"
+            end start)
     (assert (> step 0)
-        "STEP ~a should be positive and non-zero in RANGE-INCREASING"
-        step)
+            "STEP ~a should be positive and non-zero in RANGE-INCREASING"
+            step)
     (recursive-iter (+ step) (<= end) start))
 
   (declare up-to ((Num :num) (Ord :num) => :num -> Iterator :num))
@@ -186,20 +187,20 @@ iterator is empty."
     (up-to (+ 1 limit)))
 
   (declare range-decreasing ((Num :num) (Ord :num) =>
-                             :num ->
-                             :num ->
-                             :num ->
-                             (Iterator :num)))
+                                        :num ->
+                                        :num ->
+                                        :num ->
+                                        (Iterator :num)))
   (define (range-decreasing step start end)
     "A range which begins below START and counts down through and including END by STEP.
 
 Equivalent to reversing `range-increasing`"
     (assert (<= end start)
-        "END ~a should be less than or equal to START ~a in RANGE-INCREASING"
-        end start)
+            "END ~a should be less than or equal to START ~a in RANGE-INCREASING"
+            end start)
     (assert (> step 0)
-        "STEP ~a should be positive and non-zero in RANGE-INCREASING"
-        step)
+            "STEP ~a should be positive and non-zero in RANGE-INCREASING"
+            step)
     ;; FIXME: avoid underflow in the DONE? test
     (recursive-iter ((flip -) step)
                     (fn (n) (>= end (+ n step))) ; like (>= (- end step)), but without potential underflow
@@ -507,6 +508,16 @@ Return `None` if ITER is empty."
                first
                iter)))))
 
+  (declare optimizing!
+           ((:a -> :b) -> (:b -> :b -> Boolean) -> Iterator :a -> Optional :a))
+  (define (optimizing! f cmp iter)
+    (match (optimize! (fn ((Tuple _ a) (Tuple _ b)) (cmp a b))
+                      (pair-with! f iter))
+      ((Some (Tuple result _))
+       (Some result))
+      ((None)
+       None)))
+
   (declare max! (Ord :num => Iterator :num -> Optional :num))
   (define (max! iter)
     "Return the most-positive element of ITER, or `None` if ITER is empty."
@@ -516,6 +527,12 @@ Return `None` if ITER is empty."
   (define (min! iter)
     "Return the most-negative element of ITER, or `None` if ITER is empty."
     (optimize! < iter))
+
+  (define (maximizing! f iter)
+    (optimizing! f > iter))
+
+  (define (minimizing! f iter)
+    (optimizing! f < iter))
 
   (declare every! ((:elt -> Boolean) -> Iterator :elt -> Boolean))
   (define (every! good? iter)

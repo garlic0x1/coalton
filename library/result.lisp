@@ -3,7 +3,7 @@
    #:coalton
    #:coalton-library/builtin
    #:coalton-library/classes
-   #:coalton-library/optional) 
+   #:coalton-library/optional)
   (:local-nicknames
    (#:cell #:coalton-library/cell)
    (#:iter #:coalton-library/iterator))
@@ -58,7 +58,7 @@
     (match res
       ((Ok elt) elt)
       ((Err r) (error r))))
-  
+
   ;;
   ;; Instances
   ;;
@@ -158,12 +158,12 @@
       (let out =
         (iter:collect!
          (iter:map-while! (fn (x)
-                             (match x
-                               ((Ok x) (Some x))
-                               ((Err e)
-                                (cell:write! error (Some e))
-                                None)))
-                           iter)))
+                            (match x
+                              ((Ok x) (Some x))
+                              ((Err e)
+                               (cell:write! error (Some e))
+                               None)))
+                          iter)))
       (match (cell:read error)
         ((None) (Ok out))
         ((Some e) (Err e))))))
