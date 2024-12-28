@@ -41,6 +41,7 @@ supported 64-bit implementation."))))
       (I64 . (cl:signed-byte 64))
       (UFix . (cl:and cl:fixnum cl:unsigned-byte))
       (IFix . cl:fixnum)
+      (SizeT . #+32-bit (cl:unsigned-byte 32) #+64-bit (cl:unsigned-byte 64))
       (Integer . cl:integer))
     "An alist which pairs the names of Coalton's native integer types with equivalent Common Lisp type specifiers."))
 
@@ -141,6 +142,7 @@ cannot be represented in :TO. These fall into a few categories:
 (define-integer-conversions I64)
 (define-integer-conversions UFix)
 (define-integer-conversions IFix)
+(define-integer-conversions SizeT)
 (define-integer-conversions Integer)
 
 (cl:defmacro integer-into-float (integer coalton-float lisp-float)
@@ -207,6 +209,8 @@ cannot be represented in :TO. These fall into a few categories:
   (integer-tryinto-float U32 cl:single-float Single-Float 24)
 
   (integer-tryinto-float I32 cl:single-float Single-Float 24)
+
+  (integer-tryinto-float SizeT cl:single-float Single-Float 24)
 
   ;; Double Float
   (integer-tryinto-float I64 cl:double-float Double-Float 53)

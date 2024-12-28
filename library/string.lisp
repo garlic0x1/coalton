@@ -198,6 +198,7 @@ does not have that suffix."
   (define-instance (Iso (List Char) String)))
 
 (define-instance-into-integral-string Integer)
+(define-instance-into-integral-string SizeT)
 (define-instance-into-integral-string IFix)
 (define-instance-into-integral-string UFix)
 (define-instance-into-integral-string I8)

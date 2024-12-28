@@ -50,6 +50,7 @@
    #:I32
    #:I64
    #:Integer
+   #:SizeT
    #:IFix
    #:UFix
    #:Single-Float

@@ -52,6 +52,7 @@
                (cl:= a b)))))))
 
   (define-eq Integer)
+  (define-eq SizeT)
   (define-eq IFix)
   (define-eq UFix)
   (define-eq I8)
@@ -118,6 +119,7 @@
                  (to-boolean (cl:<= a b)))))))))
 
   (define-ord Integer)
+  (define-ord SizeT)
   (define-ord IFix)
   (define-ord UFix)
   (define-ord I8)
@@ -220,6 +222,7 @@
   (define-num-wrapping U16 16)
   (define-num-wrapping U32 32)
   (define-num-wrapping U64 64)
+  (define-num-wrapping SizeT #+32-bit 32 #+64-bit 64)
   (define-num-wrapping UFix #.+unsigned-fixnum-bits+)
 
 ;;;
@@ -443,6 +446,7 @@
   (define-bits-wrapping U16 16)
   (define-bits-wrapping U32 32)
   (define-bits-wrapping U64 64)
+  (define-bits-wrapping SizeT #+32-bit 32 #+64-bit 64)
   (define-bits-wrapping UFix #.+unsigned-fixnum-bits+)
 
 
@@ -461,6 +465,7 @@
     (define-sxhash-hasher U64)
     (define-sxhash-hasher IFix)
     (define-sxhash-hasher UFix)
+    (define-sxhash-hasher SizeT)
     (define-sxhash-hasher Single-Float)
     (define-sxhash-hasher Double-Float)
 
@@ -483,6 +488,7 @@
   (define-default-num U64)
   (define-default-num IFix)
   (define-default-num UFix)
+  (define-default-num SizeT)
   (define-default-num Integer)
   (define-default-num Double-Float)
   (define-default-num Single-Float))

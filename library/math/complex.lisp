@@ -197,6 +197,7 @@
 (%define-native-complex-instances Single-Float cl:single-float)
 (%define-native-complex-instances Double-Float cl:double-float)
 (%define-native-complex-instances Fraction cl:rational)
+(%define-native-complex-instances SizeT #+32-bit (cl:unsigned-byte 32) #+64-bit (cl:unsigned-byte 64))
 
 (cl:defmacro %define-standard-complex-instances (type)
   `(coalton-toplevel

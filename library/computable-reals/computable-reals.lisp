@@ -232,6 +232,11 @@ This threshold is used to ensure `Eq` and `Ord` instances terminate. (In general
       (Lisp CReal (x)
         x)))
 
+  (define-instance (Into SizeT CReal)
+    (define (Into x)
+      (Lisp CReal (x)
+        x)))
+
   (define-instance (Into UFix CReal)
     (define (Into x)
       (Lisp CReal (x)

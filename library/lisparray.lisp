@@ -96,6 +96,7 @@ WARNING: The consequences are undefined if an uninitialized element is read befo
 
   (define-lisparray-specialization Single-Float cl:single-float)
   (define-lisparray-specialization Double-Float cl:double-float)
+  (define-lisparray-specialization SizeT #+32-bit (cl:unsigned-byte 32) #+64-bit (cl:unsigned-byte 64))
   (define-lisparray-specialization IFix cl:fixnum)
   (define-lisparray-specialization UFix (cl:and cl:fixnum cl:unsigned-byte))
   (define-lisparray-specialization I8 (cl:signed-byte 8))

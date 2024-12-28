@@ -522,6 +522,7 @@ Automatically returns the lisp condition if one is thrown."
                 (%write-byte fs data))))))
 
 (coalton-toplevel
+  (define-file-type SizeT)
   (define-file-type IFix)
   (define-file-type UFix)
   (define-file-type I8)

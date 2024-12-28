@@ -263,6 +263,7 @@ are floored and truncated division, respectively."
 (%define-integral-native U32 cl:nil)
 (%define-integral-native U64 cl:nil)
 (%define-integral-native UFix cl:nil)
+(%define-integral-native SizeT cl:nil)
 (%define-remainder-native Fraction)
 
 (cl:defmacro %define-native-expt (type)

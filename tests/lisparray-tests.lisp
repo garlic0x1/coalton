@@ -36,7 +36,9 @@
   (define array/single-float (array:make 10 0.0))
   (declare array/double-float (array:LispArray Double-Float))
   (define array/double-float (array:make 10 0.0d0))
-  )
+
+  (declare array/size (array:LispArray SizeT))
+  (define array/size (array:make 10 0)))
 
 (define-test array-length ()
   (is (== (array:length array/generic) 10))

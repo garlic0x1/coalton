@@ -67,6 +67,10 @@
   (define-type I64
     "Signed 64-bit integer capable of storing values in `[-9223372036854775808, 9223372036854775807]`. Uses `(signed-byte 64)`.")
 
+  (repr :native #+32-bit (cl:unsigned-byte 32) #+64-bit (cl:unsigned-byte 64))
+  (define-type SizeT
+    "Unsigned integer based on CPU word size, equivalent to `size_t'.")
+
   (repr :native cl:fixnum)
   (define-type IFix
     "Non-allocating tagged integer; range is platform-dependent. Does not error on overflow. Uses `fixnum`.")

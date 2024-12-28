@@ -68,7 +68,11 @@
     (define minBound 0)
     (define maxBound
       (lisp UFix ()
-        cl:most-positive-fixnum))))
+        cl:most-positive-fixnum)))
+
+  (define-instance (Bounded SizeT)
+    (define minBound 0)
+    (define maxBound #+32-bit 4294967295 #+64-bit 18446744073709551615)))
 
 #+sb-package-locks
 (sb-ext:lock-package "COALTON-LIBRARY/MATH/BOUNDED")
