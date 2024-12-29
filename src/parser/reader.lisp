@@ -40,14 +40,19 @@
 
 (defmacro with-reader-context (stream &rest body)
   "Run the body in the toplevel reader context."
-  `(eclector.reader:call-as-top-level-read
-    *coalton-eclector-client*
-    (lambda ()
-      ,@body)
-    ,stream
-    nil
-    'eof
-    nil))
+  `(let ((result
+           (multiple-value-list 
+            (eclector.reader:call-as-top-level-read
+             *coalton-eclector-client*
+             (lambda ()
+               ,@body)
+             ,stream
+             nil
+             'eof
+             nil))))
+     (setq cl-user::*debug* result)
+     #+ecl (first result)
+     #-ecl result))
 
 (defun maybe-read-form (stream source &optional (eclector-client eclector.base:*client*))
   "Read the next form or return if there is no next form.
