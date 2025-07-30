@@ -502,6 +502,26 @@
         :location (source:location node))
        ctx)))
 
+  (:method ((node node-inline) ctx)
+    (declare (type algo:immutable-map ctx)
+             (values node algo:immutable-map))
+
+    (values
+     (make-node-inline
+      :application (rename-variables-generic% (node-inline-application node) ctx)
+      :location (source:location node))
+     ctx))
+
+  (:method ((node node-noinline) ctx)
+    (declare (type algo:immutable-map ctx)
+             (values node algo:immutable-map))
+
+    (values
+     (make-node-noinline
+      :application (rename-variables-generic% (node-noinline-application node) ctx)
+      :location (source:location node))
+     ctx))
+
   (:method ((pattern pattern-binding) ctx)
     (declare (type algo:immutable-map ctx)
              (values pattern algo:immutable-map))

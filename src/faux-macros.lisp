@@ -148,3 +148,7 @@
 (define-coalton-editor-macro coalton:break (&optional label))
 
 (define-coalton-editor-macro coalton:continue (&optional label))
+
+;; (define-coalton-editor-macro coalton:inline (application))
+
+;; (define-coalton-editor-macro coalton:noinline (application))

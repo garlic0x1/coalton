@@ -163,6 +163,8 @@ Returns a `node'.")
         (flet ((make-full-call ()
                  (make-node-application
                   :type (tc:qualified-ty-type qual-ty)
+                  :inlinep nil
+                  :noinlinep nil
                   :rator (make-node-variable
                           :type (tc:make-function-type*
                                  (list
@@ -259,6 +261,8 @@ Returns a `node'.")
 
       (make-node-application
        :type (tc:qualified-ty-type qual-ty)
+       :inlinep (tc:node-application-inlinep expr)
+       :noinlinep (tc:node-application-noinlinep expr)
        :rator (translate-expression (tc:node-application-rator expr) ctx env)
        :rands (mapcar
                (lambda (expr)
@@ -756,6 +760,8 @@ Returns a `node'.")
            (into-iter-node
              (make-node-application
               :type iter-ty
+              :inlinep nil
+              :noinlinep nil
               :rator (make-node-variable
                       :type (tc:make-function-type*
                              (list (pred-type intoiterator-pred env)
@@ -775,6 +781,8 @@ Returns a `node'.")
            (iter-next-node
              (make-node-application
               :type optional-pat-arg-ty
+              :inlinep nil
+              :noinlinep nil
               :rator (make-node-variable
                       :type (tc:make-function-type*
                              (list iter-ty)
@@ -1064,6 +1072,8 @@ dictionaries applied."
       (t
        (make-node-application
         :type (tc:qualified-ty-type qual-ty)
+        :inlinep nil
+        :noinlinep nil
         :rator inner-node
         :rands dicts)))))
 

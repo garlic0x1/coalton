@@ -112,6 +112,8 @@
    #:make-node-application              ; CONSTRUCTOR
    #:node-application-rator             ; ACCESSOR
    #:node-application-rands             ; ACCESSOR
+   #:node-application-inlinep           ; ACCESSOR
+   #:node-application-noinlinep         ; ACCESSOR
    #:node-or                            ; STRUCT
    #:make-node-or                       ; CONSTRUCTOR
    #:node-or-nodes                      ; ACCESSOR
@@ -383,8 +385,10 @@
 (defstruct (node-application
             (:include node)
             (:copier nil))
-  (rator (util:required 'rator) :type node      :read-only t)
-  (rands (util:required 'rands) :type node-list :read-only t))
+  (noinlinep (util:required 'noinlinep) :type boolean   :read-only t)
+  (inlinep   (util:required 'inlinep)   :type boolean   :read-only t )
+  (rator     (util:required 'rator)     :type node      :read-only t)
+  (rands     (util:required 'rands)     :type node-list :read-only t))
 
 (defstruct (node-or
             (:include node)
@@ -663,6 +667,8 @@
   (make-node-application
    :type (tc:apply-substitution subs (node-type node))
    :location (source:location node)
+   :noinlinep (node-application-noinlinep node)
+   :inlinep (node-application-inlinep node)
    :rator (tc:apply-substitution subs (node-application-rator node))
    :rands (tc:apply-substitution subs (node-application-rands node))))
 

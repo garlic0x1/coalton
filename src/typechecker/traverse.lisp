@@ -267,6 +267,8 @@
      (make-node-application
       :type (node-type node)
       :location (source:location node)
+      :inlinep (node-application-inlinep node)
+      :noinlinep (node-application-noinlinep node)
       :rator (traverse (node-application-rator node) block)
       :rands (traverse (node-application-rands node) block))))
 

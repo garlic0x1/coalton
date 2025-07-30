@@ -411,10 +411,13 @@ Returns (VALUES INFERRED-TYPE PREDICATES NODE SUBSTITUTIONS)")
                 (values type
                         preds
                         accessors
-                        (make-node-application :type (tc:qualify nil type)
-                                               :location (source:location node)
-                                               :rator rator-node
-                                               :rands rand-nodes)
+                        (make-node-application
+                         :type (tc:qualify nil type)
+                         :location (source:location node)
+                         :inlinep nil
+                         :noinlinep nil
+                         :rator rator-node
+                         :rands rand-nodes)
                         subs)))
           (tc:coalton-internal-type-error ()
             (standard-expression-type-mismatch-error node subs expected-type fun-ty_))))))
@@ -835,6 +838,54 @@ Returns (VALUES INFERRED-TYPE PREDICATES NODE SUBSTITUTIONS)")
                  subs)))
           (tc:coalton-internal-type-error ()
             (standard-expression-type-mismatch-error node subs expected-type expr-ty))))))
+
+  (:method ((node parser:node-inline) expected-type subs env)
+    (declare (type tc:ty expected-type)
+             (type tc:substitution-list subs)
+             (type tc-env env)
+             (values tc:ty tc:ty-predicate-list accessor-list node-application tc:substitution-list &optional))
+
+    (multiple-value-bind (ty preds accessors application-node subs)
+        (infer-expression-type (parser:node-inline-application node)
+                               (tc:make-variable)
+                               subs
+                               env)
+
+      (values ty
+              preds
+              accessors
+              (make-node-application
+               :location (source:location node)
+               :inlinep t
+               :noinlinep nil
+               :rator (node-application-rator application-node)
+               :rands (node-application-rands application-node)
+               :type (node-type application-node))
+              subs)))
+
+  (:method ((node parser:node-noinline) expected-type subs env)
+    (declare (type tc:ty expected-type)
+             (type tc:substitution-list subs)
+             (type tc-env env)
+             (values tc:ty tc:ty-predicate-list accessor-list node-application tc:substitution-list &optional))
+
+    (multiple-value-bind (ty preds accessors application-node subs)
+        (infer-expression-type (parser:node-noinline-application node)
+                               (tc:make-variable)
+                               subs
+                               env)
+
+      (values ty
+              preds
+              accessors
+              (make-node-application
+               :location (source:location node)
+               :inlinep nil
+               :noinlinep t
+               :rator (node-application-rator application-node)
+               :rands (node-application-rands application-node)
+               :type (node-type application-node))
+              subs)))
 
   (:method ((node parser:node-progn) expected-type subs env)
     (declare (type tc:ty expected-type)

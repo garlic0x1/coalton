@@ -92,6 +92,12 @@
    #:make-node-resumable                ; CONSTRUCTOR
    #:node-resumable-expr                ; ACCESSOR
    #:node-resumable-branches            ; ACCESSOR
+   #:node-inline                        ; STRUCT
+   #:make-node-inline                   ; CONSTRUCTOR
+   #:node-inline-application            ; ACCESSOR
+   #:node-noinline                      ; STRUCT
+   #:make-node-noinline                 ; CONSTRUCTOR
+   #:node-noinline-application          ; ACCESSOR
    #:node-progn                         ; STRUCT
    #:make-node-progn                    ; CONSTRUCTOR
    #:node-progn-body                    ; ACCESSOR
@@ -633,6 +639,16 @@ Rebound to NIL parsing an anonymous FN.")
             (:copier nil))
   (expr     (util:required 'expr)     :type node                   :read-only t)
   (branches (util:required 'branches) :type node-catch-branch-list :read-only t))
+
+(defstruct (node-inline
+            (:include node)
+            (:copier nil))
+  (application (util:required 'application) :type node-application :read-only t))
+
+(defstruct (node-noinline
+            (:include node)
+            (:copier nil))
+  (application (util:required 'application) :type node-application :read-only t))
 
 (defun parse-expression (form source)
   (declare (type cst:cst form)
@@ -1310,6 +1326,34 @@ Rebound to NIL parsing an anonymous FN.")
        (source:with-context
            (:macro "Error occurs within macro context. Source locations may be imprecise")
          (parse-expression (expand-macro form source) source))))
+
+    ;;
+    ;; Inlining
+    ;;
+
+    ((and (cst:atom (cst:first form))
+          (eq 'coalton:inline (cst:raw (cst:first form))))
+
+     (let ((application (cst:second form)))
+       (when (null application)
+         (parse-error "Malformed inline expression"
+                      (note source (cst:first form) "here")))
+
+       (make-node-inline
+        :location (form-location source form)
+        :application (parse-expression application source))))
+
+    ((and (cst:atom (cst:first form))
+          (eq 'coalton:noinline (cst:raw (cst:first form))))
+
+     (let ((application (cst:second form)))
+       (when (null application)
+         (parse-error "Malformed noinline expression"
+                      (note source (cst:first form) "here")))
+
+       (make-node-noinline
+        :location (form-location source form)
+        :application (parse-expression application source))))
 
     ;;
     ;; Function Application
